@@ -1,4 +1,5 @@
 import { useState } from "react";
+import emailjs from "@emailjs/browser";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -12,6 +13,11 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 
+// EmailJS Configuration - Replace with your actual IDs
+const EMAILJS_SERVICE_ID = "your_service_id";
+const EMAILJS_TEMPLATE_ID = "your_template_id";
+const EMAILJS_PUBLIC_KEY = "your_public_key";
+
 const ContactSection = () => {
   const [formData, setFormData] = useState({
     name: "",
@@ -19,13 +25,14 @@ const ContactSection = () => {
     phone: "",
     message: "",
   });
+  const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Simple form validation
-    if (!formData.name || !formData.email) {
+    // Validation
+    if (!formData.name.trim() || !formData.email.trim()) {
       toast({
         title: "Missing Information",
         description: "Please fill in your name and email address.",
@@ -34,19 +41,54 @@ const ContactSection = () => {
       return;
     }
 
-    // Simulate form submission
-    toast({
-      title: "Message Sent!",
-      description: "Thank you for reaching out. I'll get back to you soon.",
-    });
+    if (!formData.message.trim()) {
+      toast({
+        title: "Missing Message",
+        description: "Please write a message before sending.",
+        variant: "destructive",
+      });
+      return;
+    }
 
-    // Reset form
-    setFormData({
-      name: "",
-      email: "",
-      phone: "",
-      message: "",
-    });
+    setIsLoading(true);
+
+    try {
+      // Send email using EmailJS
+      await emailjs.send(
+        EMAILJS_SERVICE_ID,
+        EMAILJS_TEMPLATE_ID,
+        {
+          from_name: formData.name,
+          from_email: formData.email,
+          phone: formData.phone,
+          message: formData.message,
+          to_name: "Asif", // Replace with your name
+        },
+        EMAILJS_PUBLIC_KEY
+      );
+
+      toast({
+        title: "Message Sent Successfully!",
+        description: "Thank you for reaching out. I'll get back to you soon.",
+      });
+
+      // Reset form
+      setFormData({
+        name: "",
+        email: "",
+        phone: "",
+        message: "",
+      });
+    } catch (error) {
+      console.error("EmailJS Error:", error);
+      toast({
+        title: "Failed to Send Message",
+        description: "Something went wrong. Please try again or contact me directly.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleInputChange = (
@@ -218,9 +260,10 @@ const ContactSection = () => {
 
                 <Button
                   type='submit'
-                  className='w-full bg-primary hover:bg-primary-hover text-primary-foreground font-medium py-3 shadow-medium hover:shadow-glow transition-all duration-300'
+                  disabled={isLoading}
+                  className='w-full bg-primary hover:bg-primary-hover text-primary-foreground font-medium py-3 shadow-medium hover:shadow-glow transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed'
                 >
-                  Send Message
+                  {isLoading ? "Sending..." : "Send Message"}
                 </Button>
               </form>
             </CardContent>
