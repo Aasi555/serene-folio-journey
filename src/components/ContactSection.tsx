@@ -14,7 +14,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 
 // EmailJS Configuration - Replace with your actual IDs
-const EMAILJS_SERVICE_ID = "service_w63gfwr";
+const EMAILJS_SERVICE_ID = "service_qhuvw1k";
 const EMAILJS_TEMPLATE_ID = "template_m6s5jtn";
 const EMAILJS_PUBLIC_KEY = "WwBLlyC55NAo6_YkM";
 
