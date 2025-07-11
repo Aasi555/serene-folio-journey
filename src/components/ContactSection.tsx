@@ -14,9 +14,9 @@ import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 
 // EmailJS Configuration - Replace with your actual IDs
-const EMAILJS_SERVICE_ID = "your_service_id";
-const EMAILJS_TEMPLATE_ID = "your_template_id";
-const EMAILJS_PUBLIC_KEY = "your_public_key";
+const EMAILJS_SERVICE_ID = "service_qhuvw1k";
+const EMAILJS_TEMPLATE_ID = "template_2b55npw";
+const EMAILJS_PUBLIC_KEY = "GrAI-5KkHlao9iB5y";
 
 const ContactSection = () => {
   const [formData, setFormData] = useState({
